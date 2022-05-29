@@ -1,0 +1,35 @@
+service: pdf-cropper
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ap-northeast-1
+  httpApi:
+    id: emc8aum0wj
+  memorySize: 128
+  timeout: 10
+  tags:
+    Owner: choshsh
+
+#  environment:
+#    variable1: value1
+package:
+  exclude:
+    - '*'
+  include:
+    - handler.py
+
+functions:
+  pdfcrop:
+    handler: handler.main
+    layers:
+      - arn:aws:lambda:ap-northeast-1:801167518143:layer:pdfcrop:2
+    events:
+      - httpApi:
+          path: /pdfcrop
+          method: post
+
+layers:
+  pdfcrop:
+    path: layers
