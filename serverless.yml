@@ -7,29 +7,21 @@ provider:
   region: ap-northeast-1
   httpApi:
     id: emc8aum0wj
-  memorySize: 128
-  timeout: 10
+  memorySize: 256
+  timeout: 15
   tags:
     Owner: choshsh
-
-#  environment:
-#    variable1: value1
-package:
-  exclude:
-    - '*'
-  include:
-    - handler.py
+  ecr:
+    # In this section you can define images that will be built locally and uploaded to ECR
+    images:
+      appimage:
+        path: ./
+        file: Dockerfile
 
 functions:
   pdfcrop:
-    handler: handler.main
-    layers:
-      - arn:aws:lambda:ap-northeast-1:801167518143:layer:pdfcrop:2
+    image: appimage
     events:
       - httpApi:
           path: /pdfcrop
           method: post
-
-layers:
-  pdfcrop:
-    path: layers
